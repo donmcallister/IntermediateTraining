@@ -17,6 +17,7 @@
 		948546DF233140C700B1FC7C /* Company.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948546DE233140C700B1FC7C /* Company.swift */; };
 		948546E1233140CC00B1FC7C /* CreateCompanyController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948546E0233140CC00B1FC7C /* CreateCompanyController.swift */; };
 		948546E42331410400B1FC7C /* IntermediateTrainingModels.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 948546E22331410400B1FC7C /* IntermediateTrainingModels.xcdatamodeld */; };
+		948546E62331498500B1FC7C /* CoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948546E52331498500B1FC7C /* CoreDataManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,6 +33,7 @@
 		948546DE233140C700B1FC7C /* Company.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Company.swift; sourceTree = "<group>"; };
 		948546E0233140CC00B1FC7C /* CreateCompanyController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateCompanyController.swift; sourceTree = "<group>"; };
 		948546E32331410400B1FC7C /* IntermediateTrainingModels.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = IntermediateTrainingModels.xcdatamodel; sourceTree = "<group>"; };
+		948546E52331498500B1FC7C /* CoreDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -74,6 +76,7 @@
 				948546CF2331408C00B1FC7C /* LaunchScreen.storyboard */,
 				948546DE233140C700B1FC7C /* Company.swift */,
 				948546E0233140CC00B1FC7C /* CreateCompanyController.swift */,
+				948546E52331498500B1FC7C /* CoreDataManager.swift */,
 				948546D22331408C00B1FC7C /* Info.plist */,
 			);
 			path = IntermediateTraining;
@@ -156,6 +159,7 @@
 				948546DB233140B400B1FC7C /* CompaniesController.swift in Sources */,
 				948546DF233140C700B1FC7C /* Company.swift in Sources */,
 				948546C92331408B00B1FC7C /* ViewController.swift in Sources */,
+				948546E62331498500B1FC7C /* CoreDataManager.swift in Sources */,
 				948546E1233140CC00B1FC7C /* CreateCompanyController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
