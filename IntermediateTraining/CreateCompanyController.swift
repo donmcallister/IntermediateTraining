@@ -13,9 +13,19 @@ import CoreData
 
 protocol CreateCompanyControllerDelegate {
     func didAddCompany(company: Company)
+    func didEditCompany(company: Company)
 }
 
 class CreateCompanyController: UIViewController {
+    
+    // property created since want to pass company name selected into this form
+    var company: Company? {
+        didSet { // want to prefill the form:
+            nameTextField.text = company?.name
+        }
+    }
+    
+    
     
     //not tightly-coupled way to connect VC classes
     var delegate: CreateCompanyControllerDelegate?
@@ -39,12 +49,19 @@ class CreateCompanyController: UIViewController {
         return textField
     }()
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        //ternary syntax
+        navigationItem.title = company == nil ? "Create Company" : "Edit Company"
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         setupUI()
         
-        navigationItem.title = "Create Company"
+        // navigationItem.title = "Create Company"
         
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(handleCancel))
         
@@ -53,14 +70,38 @@ class CreateCompanyController: UIViewController {
         view.backgroundColor = .darkBlue
         
     }
+
     
     @objc private func handleSave() {
         print("Trying to save company..")
+        if company == nil { // creating a company..
+            createCompany()
+        } else {
+            saveCompanyChanges()
+        }
         
-        // initialization of our Core Data stack using Singleton:
-     //   CoreDataManager.shared.persistentContainer.viewContext
+    }
+    
+    fileprivate func saveCompanyChanges() {
+        let context = CoreDataManager.shared.persistentContainer.viewContext
+        company?.name = nameTextField.text
+        do {
+            try context.save()
+            
+            dismiss(animated: true) {
+                self.delegate?.didEditCompany(company: self.company!)
+            }
+            
+            
+        } catch let saveErr {
+            
+            print("Failed to save company changes: ", saveErr)
+        }
         
-       let context = CoreDataManager.shared.persistentContainer.viewContext
+    }
+    
+    fileprivate func createCompany() {
+        let context = CoreDataManager.shared.persistentContainer.viewContext
         
         let company = NSEntityDescription.insertNewObject(forEntityName: "Company", into: context)
         company.setValue(nameTextField.text, forKey: "name")
@@ -78,19 +119,6 @@ class CreateCompanyController: UIViewController {
         } catch let saveErr {
             print("Failed to save company: ", saveErr)
         }
-        
-//        dismiss(animated: true) {
-//            guard let name = self.nameTextField.text else { return }
-//
-//            let company = Company(name: name, founded: Date())
-//
-//            // 3 -- calling method in other VC view linked property:
-//            // self.companiesController?.addCompany(company: company)
-//            self.delegate?.didAddCompany(company: company)
-//        }
-        
-        
-        
     }
     
     private func setupUI() {

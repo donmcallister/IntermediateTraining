@@ -10,6 +10,13 @@ import UIKit
 import CoreData
 
 class CompaniesController: UITableViewController, CreateCompanyControllerDelegate {
+    func didEditCompany(company: Company) {
+        //update my tableview somehow
+        let row = companies.firstIndex(of: company)
+        let reloadIndexPath = IndexPath(row: row!, section: 0)
+        tableView.reloadRows(at: [reloadIndexPath], with: .middle)
+    }
+    
     
     func didAddCompany(company: Company) {
         companies.append(company)
@@ -130,13 +137,27 @@ class CompaniesController: UITableViewController, CreateCompanyControllerDelegat
                 print("Failed to delete company: ", saveErr)
             }
         }
+        deleteAction.backgroundColor = UIColor.lightRed
         
-        let editAction = UITableViewRowAction(style: .normal, title: "Edit") { (_, indexPath) in
-            print("Editing company")
-        }
+        let editAction = UITableViewRowAction(style: .normal, title: "Edit", handler: editHandlerFunction)
+        
+        editAction.backgroundColor = UIColor.darkBlue
         
         return [deleteAction, editAction]
     }
     
+   
+    
+    private func editHandlerFunction(action: UITableViewRowAction, indexPath: IndexPath) {
+        print("editing")
+        
+        let editCompanyController = CreateCompanyController()
+        editCompanyController.delegate = self // create link
+        
+        //which company? need to pass it along to other VC:
+        editCompanyController.company = companies[indexPath.row]
+        let navController = CustomNavigationController(rootViewController: editCompanyController)
+        present(navController, animated: true, completion: nil)
+    }
 }
 
