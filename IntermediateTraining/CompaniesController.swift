@@ -19,12 +19,6 @@ class CompaniesController: UITableViewController, CreateCompanyControllerDelegat
     
     var companies = [Company]()
     
-//    var companies = [
-//        Company(name: "Apple", founded: Date()),
-//        Company(name: "Google", founded: Date()),
-//        Company(name: "Facebook", founded: Date())
-//    ]
-    
     func addCompany(company: Company) {
       //  let tesla = Company(name: "Tesla", founded: Date())
         // 1 - modify array
@@ -39,8 +33,6 @@ class CompaniesController: UITableViewController, CreateCompanyControllerDelegat
         
         fetchCompanies()
         
-//        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Test Add", style: .plain, target: self, action: #selector(addCompany))
-        
         view.backgroundColor = .white
         
         navigationItem.title = "Companies"
@@ -54,7 +46,6 @@ class CompaniesController: UITableViewController, CreateCompanyControllerDelegat
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "plus").withRenderingMode(.alwaysOriginal), style: .plain, target: self, action: #selector(handleAddCompany))
         
-        setupNavigationStyle()
         
     }
     
@@ -85,10 +76,7 @@ class CompaniesController: UITableViewController, CreateCompanyControllerDelegat
         print("Adding company...")
         
         let createCompanyController = CreateCompanyController()
-       // createCompanyController.view.backgroundColor = .green
-        
-        //1 -- establish link to the CreateCompanyController() and then be able to call the addCompany method later on.. copy the property (companiesController) into that other VC you want to connect to:
-       // createCompanyController.companiesController = self
+   
         createCompanyController.delegate = self
         
         
@@ -125,9 +113,30 @@ class CompaniesController: UITableViewController, CreateCompanyControllerDelegat
         return companies.count
     }
     
-    func setupNavigationStyle() {
-        //moved to AppDelegate in appearance proxy
+    override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+        let deleteAction = UITableViewRowAction(style: .destructive, title: "Delete") { (_, indexPath) in
+            let company = self.companies[indexPath.row]
+            print("Attempting to delete company: ", company.name ?? "")
+            //remove company from tableview
+            self.companies.remove(at: indexPath.row)
+            self.tableView.deleteRows(at: [indexPath], with: .automatic)
+            //delete from Core Data
+            let context = CoreDataManager.shared.persistentContainer.viewContext
+            context.delete(company)
+            
+            do {
+                try context.save()
+            } catch let saveErr {
+                print("Failed to delete company: ", saveErr)
+            }
+        }
+        
+        let editAction = UITableViewRowAction(style: .normal, title: "Edit") { (_, indexPath) in
+            print("Editing company")
+        }
+        
+        return [deleteAction, editAction]
     }
-
+    
 }
 
