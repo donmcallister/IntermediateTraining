@@ -173,15 +173,8 @@ class CreateCompanyController: UIViewController, UIImagePickerControllerDelegate
     }
     
     private func setupUI() {
-        let lightBlueBackgroundView = UIView()
-        lightBlueBackgroundView.backgroundColor = .lightBlue
-        lightBlueBackgroundView.translatesAutoresizingMaskIntoConstraints = false
         
-        view.addSubview(lightBlueBackgroundView)
-        lightBlueBackgroundView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
-        lightBlueBackgroundView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
-        lightBlueBackgroundView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
-        lightBlueBackgroundView.heightAnchor.constraint(equalToConstant: 350).isActive = true
+       let lightBlueBackgroundView = setupLightBlueBackgroundView(height: 350)
         
         view.addSubview(companyImageView)
         companyImageView.topAnchor.constraint(equalTo: view.topAnchor, constant: 8).isActive = true
@@ -193,7 +186,6 @@ class CreateCompanyController: UIViewController, UIImagePickerControllerDelegate
         nameLabel.topAnchor.constraint(equalTo: companyImageView.bottomAnchor).isActive = true
         nameLabel.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 16).isActive = true
         nameLabel.widthAnchor.constraint(equalToConstant: 100).isActive = true
-//        nameLabel.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
         nameLabel.heightAnchor.constraint(equalToConstant: 50).isActive = true
         
         view.addSubview(nameTextField)

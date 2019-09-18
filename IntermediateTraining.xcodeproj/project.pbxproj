@@ -76,7 +76,9 @@
 		941EBFB22332ABEA000D185E /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				948546DC233140C000B1FC7C /* UIColor+theme.swift */,
 				941EBFB32332AC08000D185E /* UIViewControllers+Helpers.swift */,
+				948546E52331498500B1FC7C /* CoreDataManager.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -104,13 +106,11 @@
 				941EBFAB23328307000D185E /* Companies */,
 				948546D82331409A00B1FC7C /* AppDelegate.swift */,
 				948546E22331410400B1FC7C /* IntermediateTrainingModels.xcdatamodeld */,
-				948546DC233140C000B1FC7C /* UIColor+theme.swift */,
-				948546C82331408B00B1FC7C /* ViewController.swift */,
+				948546DE233140C700B1FC7C /* Company.swift */,
 				948546CA2331408B00B1FC7C /* Main.storyboard */,
 				948546CD2331408C00B1FC7C /* Assets.xcassets */,
 				948546CF2331408C00B1FC7C /* LaunchScreen.storyboard */,
-				948546DE233140C700B1FC7C /* Company.swift */,
-				948546E52331498500B1FC7C /* CoreDataManager.swift */,
+				948546C82331408B00B1FC7C /* ViewController.swift */,
 				948546D22331408C00B1FC7C /* Info.plist */,
 			);
 			path = IntermediateTraining;
