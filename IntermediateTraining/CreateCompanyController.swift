@@ -16,36 +16,59 @@ protocol CreateCompanyControllerDelegate {
     func didEditCompany(company: Company)
 }
 
-class CreateCompanyController: UIViewController {
+class CreateCompanyController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
-    // property created since want to pass company name selected into this form
+    // need to get company name selected in list
     var company: Company? {
         didSet { // want to prefill the form:
             nameTextField.text = company?.name
-            
-            //use guard let if don't need to return anything, otherwise use if-let
             guard let founded = company?.founded else { return }
-            
             datePicker.date = founded
         }
     }
     
-    
-    
-    //not tightly-coupled way to connect VC classes
     var delegate: CreateCompanyControllerDelegate?
     
-    // 2 - property created to create link
- //   var companiesController: CompaniesController?
+    //need to change from let to lazy var otherwise "target: self" is nil..
+    lazy var companyImageView: UIImageView = {
+        let imageView = UIImageView(image:#imageLiteral(resourceName: "select_photo_empty"))
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.isUserInteractionEnabled = true // remember this!
+        imageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleSelectPhoto)))
+        return imageView
+    }()
+    
+    @objc private func handleSelectPhoto() {
+        print("trying to select photo")
+        let imagePickerController = UIImagePickerController()
+        
+        imagePickerController.delegate = self
+        imagePickerController.allowsEditing = true
+        
+        present(imagePickerController, animated: true, completion: nil)
+    }
+    
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        dismiss(animated: true, completion: nil)
+    }
+    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        
+        if let editedImage = info[UIImagePickerController.InfoKey.editedImage] as? UIImage {
+            companyImageView.image = editedImage
+        } else if let originalImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
+            companyImageView.image = originalImage
+        }
+        
+        dismiss(animated: true, completion: nil)
+    }
     
     let nameLabel: UILabel = {
         let label = UILabel()
         label.text = "Name"
-        // label.backgroundColor = .red
-        //enable autolayout
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
-    }() // closure is similar to a method call
+    }()
     
     let nameTextField: UITextField = {
         let textField = UITextField()
@@ -64,7 +87,6 @@ class CreateCompanyController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        //ternary syntax
         navigationItem.title = company == nil ? "Create Company" : "Edit Company"
     }
     
@@ -96,8 +118,10 @@ class CreateCompanyController: UIViewController {
     
     fileprivate func saveCompanyChanges() {
         let context = CoreDataManager.shared.persistentContainer.viewContext
+        
         company?.name = nameTextField.text
         company?.founded = datePicker.date
+        
         do {
             try context.save()
             
@@ -105,12 +129,9 @@ class CreateCompanyController: UIViewController {
                 self.delegate?.didEditCompany(company: self.company!)
             }
             
-            
         } catch let saveErr {
-            
             print("Failed to save company changes: ", saveErr)
         }
-        
     }
     
     fileprivate func createCompany() {
@@ -120,12 +141,10 @@ class CreateCompanyController: UIViewController {
         company.setValue(nameTextField.text, forKey: "name")
         company.setValue(datePicker.date, forKey: "founded")
      
-        
         // perform the save
         do {
             try context.save()
-            
-            // success and dismiss
+
             dismiss(animated: true) {
                 self.delegate?.didAddCompany(company: company as! Company)
             }
@@ -144,10 +163,16 @@ class CreateCompanyController: UIViewController {
         lightBlueBackgroundView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
         lightBlueBackgroundView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
         lightBlueBackgroundView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
-        lightBlueBackgroundView.heightAnchor.constraint(equalToConstant: 250).isActive = true
+        lightBlueBackgroundView.heightAnchor.constraint(equalToConstant: 350).isActive = true
+        
+        view.addSubview(companyImageView)
+        companyImageView.topAnchor.constraint(equalTo: view.topAnchor, constant: 8).isActive = true
+        companyImageView.heightAnchor.constraint(equalToConstant: 100).isActive = true
+        companyImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        companyImageView.widthAnchor.constraint(equalToConstant: 100).isActive = true
         
         view.addSubview(nameLabel)
-        nameLabel.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        nameLabel.topAnchor.constraint(equalTo: companyImageView.bottomAnchor).isActive = true
         nameLabel.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 16).isActive = true
         nameLabel.widthAnchor.constraint(equalToConstant: 100).isActive = true
 //        nameLabel.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
@@ -170,6 +195,4 @@ class CreateCompanyController: UIViewController {
         dismiss(animated: true, completion: nil)
     }
     
-
-
 }

@@ -86,7 +86,6 @@ class CompaniesController: UITableViewController, CreateCompanyControllerDelegat
    
         createCompanyController.delegate = self
         
-        
         let navController = CustomNavigationController(rootViewController: createCompanyController)
         
         present(navController, animated: true, completion: nil)
@@ -113,10 +112,7 @@ class CompaniesController: UITableViewController, CreateCompanyControllerDelegat
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "MMM dd, yyyy"
             let foundedDateString = dateFormatter.string(from: founded)
-            
-          //  let locale = Locale(identifier: "EN")
-            
-//            let dateString = "\(name) - Founded: \(founded.description(with: locale))"
+        
             let dateString = "\(name) - Founded: \(foundedDateString)"
             cell.textLabel?.text = dateString
         } else {
@@ -125,8 +121,8 @@ class CompaniesController: UITableViewController, CreateCompanyControllerDelegat
         
         cell.textLabel?.textColor = .white
         cell.textLabel?.font = UIFont.boldSystemFont(ofSize: 16)
-        
         cell.backgroundColor = .tealColor
+        
         return cell 
         
     }
