@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		941EBFAA23328218000D185E /* CompanyCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 941EBFA923328218000D185E /* CompanyCell.swift */; };
 		948546C92331408B00B1FC7C /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948546C82331408B00B1FC7C /* ViewController.swift */; };
 		948546CC2331408B00B1FC7C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 948546CA2331408B00B1FC7C /* Main.storyboard */; };
 		948546CE2331408C00B1FC7C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 948546CD2331408C00B1FC7C /* Assets.xcassets */; };
@@ -21,6 +22,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		941EBFA923328218000D185E /* CompanyCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompanyCell.swift; sourceTree = "<group>"; };
 		948546C32331408B00B1FC7C /* IntermediateTraining.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = IntermediateTraining.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		948546C82331408B00B1FC7C /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		948546CB2331408B00B1FC7C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -47,6 +49,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		941EBFAB23328307000D185E /* Companies */ = {
+			isa = PBXGroup;
+			children = (
+				948546DA233140B400B1FC7C /* CompaniesController.swift */,
+				941EBFA923328218000D185E /* CompanyCell.swift */,
+			);
+			path = Companies;
+			sourceTree = "<group>";
+		};
 		948546BA2331408B00B1FC7C = {
 			isa = PBXGroup;
 			children = (
@@ -66,8 +77,8 @@
 		948546C52331408B00B1FC7C /* IntermediateTraining */ = {
 			isa = PBXGroup;
 			children = (
+				941EBFAB23328307000D185E /* Companies */,
 				948546D82331409A00B1FC7C /* AppDelegate.swift */,
-				948546DA233140B400B1FC7C /* CompaniesController.swift */,
 				948546E22331410400B1FC7C /* IntermediateTrainingModels.xcdatamodeld */,
 				948546DC233140C000B1FC7C /* UIColor+theme.swift */,
 				948546C82331408B00B1FC7C /* ViewController.swift */,
@@ -157,6 +168,7 @@
 				948546D92331409A00B1FC7C /* AppDelegate.swift in Sources */,
 				948546DD233140C000B1FC7C /* UIColor+theme.swift in Sources */,
 				948546DB233140B400B1FC7C /* CompaniesController.swift in Sources */,
+				941EBFAA23328218000D185E /* CompanyCell.swift in Sources */,
 				948546DF233140C700B1FC7C /* Company.swift in Sources */,
 				948546C92331408B00B1FC7C /* ViewController.swift in Sources */,
 				948546E62331498500B1FC7C /* CoreDataManager.swift in Sources */,
