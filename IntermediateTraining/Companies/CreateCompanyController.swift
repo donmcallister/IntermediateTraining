@@ -108,14 +108,11 @@ class CreateCompanyController: UIViewController, UIImagePickerControllerDelegate
         
         setupUI()
         
-        // navigationItem.title = "Create Company"
-        
-        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(handleCancel))
+        setupCancelButton()
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Save", style: .plain, target: self, action: #selector(handleSave))
         
         view.backgroundColor = .darkBlue
-        
     }
 
     
@@ -126,7 +123,6 @@ class CreateCompanyController: UIViewController, UIImagePickerControllerDelegate
         } else {
             saveCompanyChanges()
         }
-        
     }
     
     fileprivate func saveCompanyChanges() {
