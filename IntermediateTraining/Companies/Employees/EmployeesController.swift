@@ -24,40 +24,68 @@ class EmployeesController: UITableViewController, CreateEmployeeControllerDelega
         super.viewWillAppear(animated)
         
         navigationItem.title = company?.name
-        
-        
     }
     
-    private func fetchEmployees() {
-        //        company?.employees //type NSSet?
-        //        self.employees //different type, here is how to connect these two:
-       
-        // self.employees = company?.employees?.allObjects as! [Employee]
-        // better without force unwrap:
-        guard let companyEmployees = company?.employees?.allObjects as? [Employee] else {return}
-        self.employees = companyEmployees
+    override func numberOfSections(in tableView: UITableView) -> Int {
+        return 2
+    }
+    
+    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let label = UILabel()
+        if section == 0 {
+            label.text = "Short names"
+        } else {
+            label.text = "Long names"
+        }
         
-//        print("Trying to fetch employees")
-//        let context = CoreDataManager.shared.persistentContainer.viewContext
-//
-//        let request = NSFetchRequest<Employee>(entityName: "Employee")
-//
-//        do {
-//            let employees = try context.fetch(request)
-//            self.employees = employees
-//           // employees.forEach{print("Employee name: ", $0.name ?? "")}
-//        } catch let err {
-//            print("failed to fetch employees: ", err)
-//        }
+        label.textColor = UIColor.darkBlue
+        label.font = UIFont.boldSystemFont(ofSize: 16)
+        label.backgroundColor = UIColor.lightBlue
+        return label
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 50
+    }
+    
+    var shortNameEmployees = [Employee]()
+    var longNameEmployees = [Employee]()
+    
+    private func fetchEmployees() {
+        
+        guard let companyEmployees = company?.employees?.allObjects as? [Employee] else {return}
+        shortNameEmployees = companyEmployees.filter({ (employee) -> Bool in
+            if let count = employee.name?.count {
+                return count < 6
+            }
+            return false
+        })
+        
+        longNameEmployees = companyEmployees.filter({ (employee) -> Bool in
+            if let count = employee.name?.count {
+                return count > 6
+            }
+            return false
+        })
+       // self.employees = companyEmployees
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return employees.count
+        if section == 0 {
+            return shortNameEmployees.count
+        }
+        return longNameEmployees.count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath)
-        let employee = employees[indexPath.row]
+        
+//        if indexPath.section == 0 {
+//
+//        }
+        
+        let employee = indexPath.section == 0 ? shortNameEmployees[indexPath.row] : longNameEmployees[indexPath.row]
+            
         cell.textLabel?.text = employee.name
         
         if let birthday = employee.employeeInformation?.birthday {
