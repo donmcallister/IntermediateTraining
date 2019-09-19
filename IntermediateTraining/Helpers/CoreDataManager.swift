@@ -43,7 +43,7 @@ struct CoreDataManager {
             }
     }
     
-    func createEmployee(employeeName: String, company: Company) -> (Employee?, Error?) {
+    func createEmployee(employeeName: String, birthday: Date, company: Company) -> (Employee?, Error?) {
         let context = persistentContainer.viewContext
         
         //create an employee
@@ -51,16 +51,12 @@ struct CoreDataManager {
         
         employee.company = company
         
-        // let's check company is setup correctly
-//        let company = Company(context: context)
-//        company.employees //NSSet? --> can have many: good!
-//        employee.company //Company --> can only have one: good!
-        
         employee.setValue(employeeName, forKey: "name")
         
         let employeeInformation = NSEntityDescription.insertNewObject(forEntityName: "EmployeeInformation", into: context) as! EmployeeInformation
         
-        employeeInformation.taxId = "456" // safer than setValue below: 
+        employeeInformation.taxId = "456" // safer than setValue below:
+        employeeInformation.birthday = birthday
         
 //        employeeInformation.setValue("456", forKey: "taxId")
         
