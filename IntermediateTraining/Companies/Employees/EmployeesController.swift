@@ -29,18 +29,26 @@ class EmployeesController: UITableViewController, CreateEmployeeControllerDelega
     }
     
     private func fetchEmployees() {
-        print("Trying to fetch employees")
-        let context = CoreDataManager.shared.persistentContainer.viewContext
+        //        company?.employees //type NSSet?
+        //        self.employees //different type, here is how to connect these two:
+       
+        // self.employees = company?.employees?.allObjects as! [Employee]
+        // better without force unwrap:
+        guard let companyEmployees = company?.employees?.allObjects as? [Employee] else {return}
+        self.employees = companyEmployees
         
-        let request = NSFetchRequest<Employee>(entityName: "Employee")
-        
-        do {
-            let employees = try context.fetch(request)
-            self.employees = employees
-           // employees.forEach{print("Employee name: ", $0.name ?? "")}
-        } catch let err {
-            print("failed to fetch employees: ", err)
-        }
+//        print("Trying to fetch employees")
+//        let context = CoreDataManager.shared.persistentContainer.viewContext
+//
+//        let request = NSFetchRequest<Employee>(entityName: "Employee")
+//
+//        do {
+//            let employees = try context.fetch(request)
+//            self.employees = employees
+//           // employees.forEach{print("Employee name: ", $0.name ?? "")}
+//        } catch let err {
+//            print("failed to fetch employees: ", err)
+//        }
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -81,6 +89,7 @@ class EmployeesController: UITableViewController, CreateEmployeeControllerDelega
         print("trying to add an employee")
         let createEmployeeController = CreateEmployeeController()
         createEmployeeController.delegate = self
+        createEmployeeController.company = company 
         let navController = UINavigationController(rootViewController: createEmployeeController)
         present(navController, animated: true, completion: nil)
     

@@ -43,11 +43,18 @@ struct CoreDataManager {
             }
     }
     
-    func createEmployee(employeeName: String) -> (Employee?, Error?) {
+    func createEmployee(employeeName: String, company: Company) -> (Employee?, Error?) {
         let context = persistentContainer.viewContext
         
         //create an employee
         let employee = NSEntityDescription.insertNewObject(forEntityName: "Employee", into: context) as! Employee
+        
+        employee.company = company
+        
+        // let's check company is setup correctly
+//        let company = Company(context: context)
+//        company.employees //NSSet? --> can have many: good!
+//        employee.company //Company --> can only have one: good!
         
         employee.setValue(employeeName, forKey: "name")
         
