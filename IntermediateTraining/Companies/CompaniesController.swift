@@ -69,7 +69,7 @@ class CompaniesController: UITableViewController {
                     //let's try to update UI after save:
                     //but fetch request here on background context is not aware of changes on main context
                     //reset on viewContext will forget all objects you've fetched before, especially in cases where updates done two only a select few
-                    //need to merge changes
+                    //need to merge changes, by putting updates on child context instead: doNestedUpdates()
                     
                     
                 } catch let saveErr {
@@ -78,6 +78,56 @@ class CompaniesController: UITableViewController {
                 
             } catch let err {
                 print("Failed to fetch companies on background: ", err)
+            }
+            
+        }
+    }
+    
+    @objc private func doNestedUpdates() {
+        print("Trying to perform nested updates now..")
+        
+        DispatchQueue.global(qos: .background).async {
+            //we'll try to perform out updates
+            
+            //we'll first construct a custom MOC - Managed Object context
+            let privateContext = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
+            privateContext.parent = CoreDataManager.shared.persistentContainer.viewContext
+            
+            //execute updates on privateContext now
+            let request:NSFetchRequest<Company> = Company.fetchRequest()
+            request.fetchLimit = 1
+            
+            do {
+                let companies = try privateContext.fetch(request)
+                companies.forEach({ (company) in
+                    print(company.name ?? "")
+                    company.name = "D: \(company.name ?? "")"
+                })
+                
+                do {
+                    try privateContext.save()
+                    
+                    DispatchQueue.main.async {
+                        do {
+                            let context = CoreDataManager.shared.persistentContainer.viewContext
+                            if context.hasChanges {
+                                try context.save()
+                            }
+                            self.tableView.reloadData() //this alone doesn't persist the changes back on main context.. above lines will get it to work: the changes will propagate updwards to parent
+                            // problem is any sibling child context unaware of these changes.. to address next.
+                            
+                        } catch let saveErr {
+                            print("failed to persist save on main context: ", saveErr)
+                        }
+                        
+                       
+                    }
+                } catch let saveErr {
+                    print("failed to save on private context: ", saveErr)
+                }
+                
+            } catch let fetchErr {
+                print("failed to fetch on private context: ", fetchErr)
             }
             
         }
@@ -106,7 +156,7 @@ class CompaniesController: UITableViewController {
         
         navigationItem.leftBarButtonItems = [
             UIBarButtonItem(title: "Reset", style: .plain, target: self, action: #selector(handleReset)),
-            UIBarButtonItem(title: "Do Updates", style: .plain, target: self, action: #selector(doUpdate))
+            UIBarButtonItem(title: "Do Nested Updates", style: .plain, target: self, action: #selector(doNestedUpdates))
         ]
         
     }
