@@ -13,6 +13,42 @@ class CompaniesController: UITableViewController {
     
     var companies = [Company]()
     
+    @objc private func doWork() {
+        print("Trying to do work...")
+        
+        CoreDataManager.shared.persistentContainer.performBackgroundTask({ (backgroundContext) in
+            
+            (0...20000).forEach { (value) in
+                print(value)
+                let company = Company(context: backgroundContext)
+                company.name = String(value)
+            }
+            
+            do {
+                try backgroundContext.save()
+            } catch let err {
+                print("Failed to save:", err)
+            }
+            
+        })
+        
+        // GCD - Grand Central Dispatch
+        
+        DispatchQueue.global(qos: .background).async {
+            
+            
+            
+            // creating some Company objects on a background thread
+            
+            //            let context = CoreDataManager.shared.persistentContainer.viewContext
+            
+            //NSEntityDescription.insertNewObject(forEntityName: "Company", into: context)
+            
+            
+        }
+        
+    }
+    
     func addCompany(company: Company) {
       //  let tesla = Company(name: "Tesla", founded: Date())
         // 1 - modify array
@@ -43,7 +79,10 @@ class CompaniesController: UITableViewController {
         
         setupPlusButtonInNavBar(selector: #selector(handleAddCompany))
         
-        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Reset", style: .plain, target: self, action: #selector(handleReset))
+        navigationItem.leftBarButtonItems = [
+            UIBarButtonItem(title: "Reset", style: .plain, target: self, action: #selector(handleReset)),
+            UIBarButtonItem(title: "Do Work", style: .plain, target: self, action: #selector(doWork))
+        ]
         
     }
     
