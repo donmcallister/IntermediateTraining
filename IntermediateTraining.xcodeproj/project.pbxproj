@@ -69,7 +69,6 @@
 			isa = PBXGroup;
 			children = (
 				94414E43233528EF00040335 /* CompaniesAutoUpdateController.swift */,
-				94414E4523353FAC00040335 /* Service.swift */,
 				948546DA233140B400B1FC7C /* CompaniesController.swift */,
 				948546E0233140CC00B1FC7C /* CreateCompanyController.swift */,
 				941EBFA923328218000D185E /* CompanyCell.swift */,
@@ -86,6 +85,7 @@
 				948546DC233140C000B1FC7C /* UIColor+theme.swift */,
 				941EBFB32332AC08000D185E /* UIViewControllers+Helpers.swift */,
 				948546E52331498500B1FC7C /* CoreDataManager.swift */,
+				94414E4523353FAC00040335 /* Service.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
