@@ -79,7 +79,7 @@ class CompaniesAutoUpdateController: UITableViewController, NSFetchedResultsCont
     @objc private func handleDelete() {
         let request: NSFetchRequest<Company> = Company.fetchRequest()
         
-        request.predicate = NSPredicate(format: "name CONTAINS %@", "B")
+     //   request.predicate = NSPredicate(format: "name CONTAINS %@", "B")
         
         let context = CoreDataManager.shared.persistentContainer.viewContext
         let companiesWithB = try? context.fetch(request)
@@ -106,9 +106,12 @@ class CompaniesAutoUpdateController: UITableViewController, NSFetchedResultsCont
         
         tableView.backgroundColor = UIColor.darkBlue
         
-        fetchedResultsController.fetchedObjects?.forEach({ (company) in
-            print(company.name ?? "")
-        })
+//        fetchedResultsController.fetchedObjects?.forEach({ (company) in
+//            print(company.name ?? "")
+//        })
+        
+    //    let service = Service()
+        Service.shared.downloadCompaniesFromServer()
     }
     
     
