@@ -20,8 +20,10 @@ class IndentedLabel: UILabel {
 
 class EmployeesController: UITableViewController, CreateEmployeeControllerDelegate {
     
+    //remember this is called when dismiss employee creation
     func didAddEmployee(employee: Employee) {
-        employees.append(employee)
+//        employees.append(employee)
+        fetchEmployees()
         tableView.reloadData()
     }
     
@@ -38,11 +40,11 @@ class EmployeesController: UITableViewController, CreateEmployeeControllerDelega
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let label = IndentedLabel()
         if section == 0 {
-            label.text = "Short names"
+            label.text = "Executive"
         } else  if section == 1 {
-            label.text = "Long names"
+            label.text = "Senior Management"
         } else {
-            label.text = "Really long names"
+            label.text = "Staff"
         }
         
         label.textColor = UIColor.darkBlue
@@ -55,52 +57,29 @@ class EmployeesController: UITableViewController, CreateEmployeeControllerDelega
         return 50
     }
     
-    var shortNameEmployees = [Employee]()
-    var longNameEmployees = [Employee]()
-    var reallyLongNameEmployees = [Employee]()
-    
     var allEmployees = [[Employee]]()
     
     private func fetchEmployees() {
+        guard let companyEmployees = company?.employees?.allObjects as? [Employee] else { return }
+       // self.employees = companyEmployees
         
-        guard let companyEmployees = company?.employees?.allObjects as? [Employee] else {return}
-        shortNameEmployees = companyEmployees.filter({ (employee) -> Bool in
-            if let count = employee.name?.count {
-                return count < 6
-            }
-            return false
-        })
+        //let's filter employees for "Executive" type
+        let executives = companyEmployees.filter { (employee) -> Bool in
+            return employee.type == "Executive"
+        }
         
-        longNameEmployees = companyEmployees.filter({ (employee) -> Bool in
-            if let count = employee.name?.count {
-                return count > 6 && count < 9
-            }
-            return false
-        })
-        
-        reallyLongNameEmployees = companyEmployees.filter({ (employee) -> Bool in
-            if let count = employee.name?.count {
-                return count > 9
-            }
-            return false
-        })
+        let seniorManagement = companyEmployees.filter {$0.type == "Senior Management" }
         
         allEmployees = [
-            shortNameEmployees,
-            longNameEmployees,
-            reallyLongNameEmployees
+        executives,
+        seniorManagement,
+            companyEmployees.filter {$0.type == "Staff" }
         ]
-        
-       // self.employees = companyEmployees
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return allEmployees[section].count
-    
-//        if section == 0 {
-//            return shortNameEmployees.count
-//        }
-//        return longNameEmployees.count
+
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -109,8 +88,6 @@ class EmployeesController: UITableViewController, CreateEmployeeControllerDelega
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath)
- 
-//        let employee = indexPath.section == 0 ? shortNameEmployees[indexPath.row] : longNameEmployees[indexPath.row]
         
         let employee = allEmployees[indexPath.section][indexPath.row]
         
@@ -121,11 +98,6 @@ class EmployeesController: UITableViewController, CreateEmployeeControllerDelega
             dateFormatter.dateFormat = "MM/dd/yyyy"
             cell.textLabel?.text = "\(employee.name ?? "") \(dateFormatter.string(from: birthday))"
         }
-        
-//        if let taxId = employee.employeeInformation?.taxId {
-//            cell.textLabel?.text = "\(employee.name ?? "") \(taxId)"
-//        }
-//
         
         cell.backgroundColor = UIColor.tealColor
         cell.textLabel?.textColor = .white
