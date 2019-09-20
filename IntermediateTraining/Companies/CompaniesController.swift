@@ -18,7 +18,7 @@ class CompaniesController: UITableViewController {
         
         CoreDataManager.shared.persistentContainer.performBackgroundTask({ (backgroundContext) in
             
-            (0...20000).forEach { (value) in
+            (0...5).forEach { (value) in
                 print(value)
                 let company = Company(context: backgroundContext)
                 company.name = String(value)
@@ -26,26 +26,17 @@ class CompaniesController: UITableViewController {
             
             do {
                 try backgroundContext.save()
+                
+                //back on main
+                DispatchQueue.main.async {
+                     self.companies = CoreDataManager.shared.fetchCompanies()
+                    self.tableView.reloadData() //doesn't work alone just yet because need to fetch first above
+                }
             } catch let err {
                 print("Failed to save:", err)
             }
             
         })
-        
-        // GCD - Grand Central Dispatch
-        
-        DispatchQueue.global(qos: .background).async {
-            
-            
-            
-            // creating some Company objects on a background thread
-            
-            //            let context = CoreDataManager.shared.persistentContainer.viewContext
-            
-            //NSEntityDescription.insertNewObject(forEntityName: "Company", into: context)
-            
-            
-        }
         
     }
     
@@ -58,6 +49,40 @@ class CompaniesController: UITableViewController {
         tableView.insertRows(at: [newIndexPath], with: .automatic)
     }
 
+    // let's do some tricky update with core data, like when downloading from server so UI doesn't freeze
+    @objc private func doUpdate() {
+        print("Trying to update companies on a background context")
+        CoreDataManager.shared.persistentContainer.performBackgroundTask { (backgroundContext) in
+            
+            //don't want to get companies from main thread, so new fetch:
+            let request: NSFetchRequest<Company> = Company.fetchRequest()
+            do {
+                let companies = try backgroundContext.fetch(request)
+                companies.forEach({ (company) in
+                    print(company.name ?? "")
+                    company.name = "A: \(company.name ?? "")"
+                })
+                
+                do {
+                    try  backgroundContext.save()
+                    
+                    //let's try to update UI after save:
+                    //but fetch request here on background context is not aware of changes on main context
+                    //reset on viewContext will forget all objects you've fetched before, especially in cases where updates done two only a select few
+                    //need to merge changes
+                    
+                    
+                } catch let saveErr {
+                    print("save error on background: ", saveErr)
+                }
+                
+            } catch let err {
+                print("Failed to fetch companies on background: ", err)
+            }
+            
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -81,7 +106,7 @@ class CompaniesController: UITableViewController {
         
         navigationItem.leftBarButtonItems = [
             UIBarButtonItem(title: "Reset", style: .plain, target: self, action: #selector(handleReset)),
-            UIBarButtonItem(title: "Do Work", style: .plain, target: self, action: #selector(doWork))
+            UIBarButtonItem(title: "Do Updates", style: .plain, target: self, action: #selector(doUpdate))
         ]
         
     }
