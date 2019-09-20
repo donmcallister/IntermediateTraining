@@ -40,11 +40,11 @@ class EmployeesController: UITableViewController, CreateEmployeeControllerDelega
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let label = IndentedLabel()
         if section == 0 {
-            label.text = "Executive"
+            label.text = EmployeeType.Executive.rawValue
         } else  if section == 1 {
-            label.text = "Senior Management"
+            label.text = EmployeeType.SeniorManagement.rawValue
         } else {
-            label.text = "Staff"
+            label.text = EmployeeType.Staff.rawValue
         }
         
         label.textColor = UIColor.darkBlue
@@ -65,15 +65,15 @@ class EmployeesController: UITableViewController, CreateEmployeeControllerDelega
         
         //let's filter employees for "Executive" type
         let executives = companyEmployees.filter { (employee) -> Bool in
-            return employee.type == "Executive"
+            return employee.type == EmployeeType.Executive.rawValue
         }
         
-        let seniorManagement = companyEmployees.filter {$0.type == "Senior Management" }
+        let seniorManagement = companyEmployees.filter {$0.type == EmployeeType.SeniorManagement.rawValue }
         
         allEmployees = [
         executives,
         seniorManagement,
-            companyEmployees.filter {$0.type == "Staff" }
+            companyEmployees.filter {$0.type == EmployeeType.Staff.rawValue }
         ]
     }
     
